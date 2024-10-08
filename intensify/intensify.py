@@ -1,5 +1,4 @@
 import math
-import colorsys
 from .colormaps import COLORMAPS
 
 def match_arrays(a, b):

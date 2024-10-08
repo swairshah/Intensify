@@ -24,6 +24,11 @@ data = {
 intesifier.print(data)
 ```
 
+This is how it looks:
+
+![image](./assets/example.png)
+
+
 ## Features
 
 - Multiple predefined colormaps
