@@ -7,17 +7,17 @@ def main():
         "text": ["This", "is", "an", "example", "sentence", "where", "words", "are", "colored", "using", "inferno"],
         "intensities": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.0]
     }
-    intensifier.print(data)
+    intensifier.print(data, join_str=' ')
 
     data = {
         "text": ["This", "is", "an", "example", "sentence", "where", "words", "are", "colored", "using", "reds"],
         "intensities": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.0]
     }
     intensifier.set_colormap('reds')
-    intensifier.print(data)
+    intensifier.print(data, join_str=' ')
 
     intensifier.set_colormap('reds')
-    intensifier.print(data)
+    intensifier.print(data, join_str=' ')
 
     print("\nExample with close together values:")
     close_data = {
@@ -26,16 +26,10 @@ def main():
     }
     
     print("Without contrast enhancement:")
-    intensifier.print(close_data, enhance=False)
+    intensifier.print(close_data, enhance=False, join_str=' ')
     
     print("\nWith contrast enhancement:")
-    intensifier.print(close_data, enhance=True)
-
-    intensifier.set_colormap('reds')
-    intensifier.print(close_data, enhance=True)
-
-    intensifier.set_colormap('plasma')
-    intensifier.print(close_data, enhance=True)
+    intensifier.print(close_data, enhance=True, join_str=' ')
 
 if __name__ == "__main__":
     main()

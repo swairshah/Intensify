@@ -105,7 +105,7 @@ class Intensify:
         enhanced = [rank / (len(intensities) - 1) for rank in ranks]
         return enhanced
 
-    def print(self, data, background=False, print_output=True, enhance=True):
+    def print(self, data, background=False, print_output=True, enhance=True, join_str=None):
         """
         Apply color to each text element based on corresponding intensity.
 
@@ -142,7 +142,10 @@ class Intensify:
             colored_word = f"{color_code}{word}{self.ANSI_RESET}"
             colored_texts.append(colored_word)
 
-        result = ' '.join(colored_texts)
+        if join_str:
+            result = join_str.join(colored_texts)
+        else:
+            result = ''.join(colored_texts)
 
         if print_output:
             print(result)
