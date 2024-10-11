@@ -88,13 +88,31 @@ class Intensify:
         else:
             return f"\033[38;2;{r};{g};{b}m"
 
-    def print(self, data, background=False, print_output=True):
+    def enhance_contrast(self, intensities):
+        """
+        Enhance contrast of intensities using a simplified histogram equalization.
+
+        :param intensities: List of intensity values
+        :return: List of enhanced intensity values
+        """
+        # Sort intensities and get their ranks
+        sorted_intensities = sorted(enumerate(intensities), key=lambda x: x[1])
+        ranks = [0] * len(intensities)
+        for i, (index, _) in enumerate(sorted_intensities):
+            ranks[index] = i
+
+        # Map ranks to new intensity values
+        enhanced = [rank / (len(intensities) - 1) for rank in ranks]
+        return enhanced
+
+    def print(self, data, background=False, print_output=True, enhance=True):
         """
         Apply color to each text element based on corresponding intensity.
 
         :param data: Dictionary with 'text' and 'intensities' lists
         :param background: If True, apply background colors instead of text colors
         :param print_output: If True, prints the colored text. Otherwise, returns the string.
+        :param enhance: If True, applies contrast enhancement to intensities
         :return: Colored string if print_output is False
         """
         texts = data.get("text", [])
@@ -102,13 +120,22 @@ class Intensify:
 
         if len(texts) != len(intensities):
             intensities = match_arrays(texts, intensities)
-            #raise ValueError("The length of 'text' and 'intensities' lists must be the same.")
+
+        # normalize intensities 
+        if any(i < 0 or i > 1 for i in intensities):
+            min_intensity = min(intensities)
+            max_intensity = max(intensities)
+            if min_intensity != max_intensity:
+                intensities = [(i - min_intensity) / (max_intensity - min_intensity) for i in intensities]
+            else:
+                intensities = [1.0] * len(intensities)
+
+        # Apply contrast enhancement if enabled
+        if enhance:
+            intensities = self.enhance_contrast(intensities)
 
         colored_texts = []
         for word, intensity in zip(texts, intensities):
-            if not (0 <= intensity <= 1):
-                raise ValueError(f"Intensity value {intensity} is out of range [0, 1].")
-
             calibrated_intensity = self.calibrate_intensity(intensity)
             color = self.map_intensity_to_color(calibrated_intensity)
             color_code = self.get_ansi_color_code(color, background)
@@ -122,7 +149,7 @@ class Intensify:
         else:
             return result
 
-    def print_sentence(self, sentence, intensities, background=False, print_output=True):
+    def print_sentence(self, sentence, intensities, background=False, print_output=True, enhance=True):
         """
         Helper method to colorize a sentence based on word intensities.
 
@@ -130,11 +157,12 @@ class Intensify:
         :param intensities: List of intensity values for each word
         :param background: If True, apply background colors instead of text colors
         :param print_output: If True, prints the colored text. Otherwise, returns the string.
+        :param enhance: If True, applies contrast enhancement to intensities
         :return: Colored string if print_output is False
         """
         words = sentence.split()
         data = {"text": words, "intensities": intensities}
-        return self.print(data, background, print_output)
+        return self.print(data, background, print_output, enhance)
 
     def add_custom_colormap(self, name, colors):
         """

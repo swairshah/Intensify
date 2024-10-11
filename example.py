@@ -1,23 +1,41 @@
 from intensify import Intensify
 
 def main():
-    intesifier = Intensify(calibration_factor=1.0, colormap='inferno')
+    intensifier = Intensify(calibration_factor=1.0, colormap='inferno')
 
     data = {
         "text": ["This", "is", "an", "example", "sentence", "where", "words", "are", "colored", "using", "inferno"],
         "intensities": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.0]
     }
-    intesifier.print(data)
+    intensifier.print(data)
 
     data = {
         "text": ["This", "is", "an", "example", "sentence", "where", "words", "are", "colored", "using", "reds"],
         "intensities": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.0]
     }
-    intesifier.set_colormap('reds')
-    intesifier.print(data)
+    intensifier.set_colormap('reds')
+    intensifier.print(data)
 
-    intesifier.set_colormap('reds')
-    intesifier.print(data)
+    intensifier.set_colormap('reds')
+    intensifier.print(data)
+
+    print("\nExample with close together values:")
+    close_data = {
+        "text": ["These", "words", "have", "very", "similar", "intensity", "values"],
+        "intensities": [0.50, 0.51, 0.52, 0.53, 0.54, 0.55, 0.56]
+    }
+    
+    print("Without contrast enhancement:")
+    intensifier.print(close_data, enhance=False)
+    
+    print("\nWith contrast enhancement:")
+    intensifier.print(close_data, enhance=True)
+
+    intensifier.set_colormap('reds')
+    intensifier.print(close_data, enhance=True)
+
+    intensifier.set_colormap('plasma')
+    intensifier.print(close_data, enhance=True)
 
 if __name__ == "__main__":
     main()
